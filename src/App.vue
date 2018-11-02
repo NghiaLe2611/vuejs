@@ -22,7 +22,7 @@
     import advancedTodo from './components/advancedTodo'
     import filterSearch from './components/filterSearch'
     import checkOut from './components/checkOut'
-    import shoppingCart from './components/shoppingCart'
+    import shoppingCart from './components/shopping-cart/shoppingCart'
 
     export default {
         name: 'app',
@@ -55,7 +55,6 @@
 
     
 </script>
-
 
 
 <style>
@@ -98,6 +97,61 @@
     }
     .router-link-active{
         color: #50cf30;
+    }
+    
+    .flying {
+        -webkit-animation: fly 0.8s 1;
+        animation: fly 0.8s 1;
+    }
+    .shaking {
+        animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+
+    @keyframes fly {
+        0% {
+            -moz-transform: rotate(0deg); 
+            -ms-transform: rotate(0deg); 
+            -o-transform: rotate(0deg); 
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -moz-transform: rotate(360deg); 
+            -ms-transform: rotate(360deg); 
+            -o-transform: rotate(360deg); 
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @-webkit-keyframes fly {
+        0% {
+            -webkit-transform: rotate(0deg); 
+        }
+        100% {
+            -webkit-transform: rotate(360deg); 
+        }
+    }
+
+    @keyframes shake {
+        10%, 90% {
+            transform: translate3d(-1px, 0, 0);
+        }
+        
+        20%, 80% {
+            transform: translate3d(2px, 0, 0);
+        }
+
+        30%, 50%, 70% {
+            transform: translate3d(-4px, 0, 0);
+        }
+
+        40%, 60% {
+            transform: translate3d(4px, 0, 0);
+        }
     }
 
 </style>

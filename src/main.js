@@ -9,7 +9,7 @@ import todo from './components/todo'
 import advancedTodo from './components/advancedTodo'
 import filterSearch from './components/filterSearch'
 import checkOut from './components/checkOut'
-import shoppingCart from './components/shoppingCart'
+import shoppingCart from './components/shopping-cart/shoppingCart'
 
 //window.$ = window.jQuery = jQuery;
 
