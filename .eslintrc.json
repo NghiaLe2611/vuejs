@@ -1,5 +1,8 @@
 {
-  "extends": ["plugin:vue/recommended"],
+  "extends": [
+    "eslint:recommmend",
+    "plugin:vue/recommended"
+  ],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -30,6 +33,10 @@
     "curly": 0,
     "eqeqeq": 0,
     "func-names": 0,
-    "valid-typeof": 1
+    "valid-typeof": 1,
+    "vue/html-no-self-closing": "off'",
+    "import/no-unresolved": 0,
+    "import/no-unassigned-import": 0,
+    "no-console": "off"
   }
 }

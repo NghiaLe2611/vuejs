@@ -10,9 +10,9 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "babel-eslint": "^10.0.1",
     "canvas2image": "^1.0.5",
     "color-picker": "0.0.1",
-    "eslint": "^5.7.0",
     "html2canvas": "^1.0.0-alpha.12",
     "jquery": "^3.3.1",
     "sweetalert2": "^7.28.8",
@@ -31,6 +31,10 @@
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
+    "eslint": "^5.8.0",
+    "eslint-config-vue": "latest",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "beta",
     "file-loader": "^1.1.4",
     "jquery": "^3.3.1",
     "vue-loader": "^13.0.5",

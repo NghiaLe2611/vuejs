@@ -7,11 +7,12 @@
                 <i class="fa fa-shopping-cart"></i>
                 <cartModal v-if="showCart"
                     :cartList = cartList
+                    :number_format = number_format
                 />
+                
             </div>
         </div>
 
-        
         <div class="container">
             <div class="content">
                 <ul class="list">
@@ -113,7 +114,7 @@
                 productList: productList,
                 totalCart: 0,
                 showCart: false,
-                cartList: [],
+                cartList: []
             }
         },
         created: function() {
@@ -121,12 +122,16 @@
         },
         methods: {
             documentClick(e){
-                if (e.target.closest('.btn-cart, #cart, #cart-modal') == null ) {
+                if (e.target.closest('.btn-cart, #cart, #cart-modal, .qty-btn') == null ) {
                     this.showCart = false;
                 } 
             },
             showCartModal: function(){
-                this.showCart = true;
+                if(this.totalCart != 0){
+                    this.showCart = true;
+                } else{
+                    this.showCart = false;
+                }
             },
             number_format: function(number, decimals, dec_point, thousands_point){
                 if (number == null || !isFinite(number)) {
@@ -156,7 +161,6 @@
 
                 return number;
             },
-
             selectAmount: function(item, type){
                 if(type == 'decrease'){
                     if(item.quantity > 1){
@@ -166,17 +170,46 @@
                     item.quantity += 1;
                 }
             },
-
             changeQty: function(index, item){
                 item.quantity = parseInt(this.$refs.amount[index].value);
             },
-
             addToCart: function(event, item){
 
                 //Add item to cart
-                this.cartList.push(item);
-                this.totalCart += item.quantity;
+                var cartList = this.cartList;
+                
+                // var isExist = cartList.some(function(el){ 
+                //     return el.name === item.name;
+                // });
 
+                var cartItem = {
+                    name: item.name,
+                    img: item.img,
+                    desc: item.desc,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+
+                var isExist = false;
+
+                for(var i = 0; i < cartList.length; i++){
+                    if(cartList[i].name === cartItem.name){
+                        cartList[i].quantity += item.quantity;
+                        //return false;
+                        isExist = true;
+                        break;
+                    }
+                }   
+
+                // var total = this.cartList.reduce(function (qty, item) {
+                //      return qty + item.quantity; 
+                // }, 0);
+
+                if(!isExist){
+                    cartList.push(cartItem);
+                } 
+                this.totalCart += item.quantity;
+              
                 //Fly to cart
                 var el = $(event.target);
                 var item = $(el).closest('.item');
@@ -214,10 +247,6 @@
 				setTimeout(function () { 
                     $('#cart').removeClass('shaking');
                 }, 1000);
-            },
-
-            change: function(){
-                this.title ='changed';
             }
             
         },
@@ -264,13 +293,11 @@
         align-items: center;
         cursor: pointer;
         z-index: 10;
-        transition: width 0.3s ease;
     }
     .cart.open{
         width: 400px;
         padding: 20px;
         justify-content: flex-end;
-        transition: width 0.3s ease;
     }
     .cart .cart-count{
         font-size: 20px;
@@ -389,5 +416,6 @@
     .wrap-img:hover .overlay i{
         top: 50%;
     }
+
     
 </style>
