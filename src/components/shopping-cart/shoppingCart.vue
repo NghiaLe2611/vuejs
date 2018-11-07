@@ -31,7 +31,7 @@
                                 <input type="text" class="quantity" ref="amount" :value="item.quantity" @keyup="changeQty(index, item)">
                                 <span class="qty-btn increase" @click="selectAmount(item, 'increase')">+</span>
                             </p>
-                            <button class="btn-cart" @click="addToCart($event, item)">Add to cart</button>
+                            <button class="btn btn-cart" @click="addToCart($event, item)">Add to cart</button>
                          </div>
                     </li>
                 </ul>
@@ -295,7 +295,7 @@
         z-index: 10;
     }
     .cart.open{
-        width: 400px;
+        width: 450px;
         padding: 20px;
         justify-content: flex-end;
     }
@@ -340,10 +340,12 @@
     .list .item img{
         width: 100%;
     }
-    .btn-cart{
-        padding: 0.5em 3em;
+    .btn{
         background-color: transparent;
         border: 1px solid #000;
+    }
+    .btn-cart{
+        padding: 0.5em 3em;
     }
     .btn-cart:hover{
         background-color: #000;

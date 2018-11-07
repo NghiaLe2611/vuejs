@@ -13,7 +13,13 @@
                 <span class="remove">&times;</span>
             </li>
         </ul>
-        <div class="total">0 <small>đ</small></div>
+        <div class="wrap-cart">
+            <div class="wrap-btn">
+                <button class="btn btn-clear">Remove all</button>
+                <button class="btn btn-checkout">Check out</button>
+            </div>
+            <div class="total">0 <small>đ</small></div>
+        </div>
     </div>
 </template>
 
@@ -43,6 +49,16 @@
 </script>
 
 <style scoped>
+    .btn{
+        background-color: #fff;
+        border: 1px solid #000;
+        padding: 0.5em 1.5em;
+    }
+    .btn:hover{
+        background-color: #000;
+        color: #fff;
+        transition: 0.3s ease;
+    }
     #cart-modal{
         position: absolute;
         top: 70px;
@@ -70,7 +86,7 @@
         font-size: 14px;
     }
     .cart-list li .price{
-        font-size: 12px;
+        font-size: 14px;
         margin-right: 10px;
     }
     .cart-list li .action{
@@ -112,12 +128,17 @@
     .thumb-imb img{
         width: 100%;
     }
+    .wrap-cart{
+        border-top: 1px solid #fff;
+        padding: 15px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .total{
-        padding: 10px 0;
         text-align: right;
         font-size: 25px;
-        color: #fff;
-        border-top: 1px solid #fff;
+        color: #fff;  
     }
     .total small{
         color: #fff;
