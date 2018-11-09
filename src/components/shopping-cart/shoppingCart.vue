@@ -22,7 +22,7 @@
                     <li class="item" v-for="(item, index) in productList" :key="index">
                         <div class="wrap-img">
                             <img :src="item.img" :alt="item.name">
-                            <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                            <div class="overlay" @click="showGalleryModal(item)"><i class="fas fa-search-plus"></i></div>
                         </div>
                          <h3 class="name">{{item.name}}</h3>
                          <p class="desc">{{item.desc}}</p>
@@ -32,7 +32,7 @@
                                 <label for="qty">QTY</label>
                                 <span class="qty-btn decrease" @click="selectAmount(item, 'decrease')">-</span>
                                 <input type="text" class="quantity" ref="amount" :value="item.quantity" @keyup="changeQty(index, item)">
-                                <span class="qty-btn increase" @click="selectAmount(item, 'increase')">+</span>
+                                <span class="qty-btn increase" @click="0(item, 'increase')">+</span>
                             </p>
                             <button class="btn btn-cart" @click="addToCart($event, item)">Add to cart</button>
                          </div>
@@ -40,6 +40,10 @@
                 </ul>
             </div>  
         </div>
+        <galleryModal v-if="showGallery"
+            :productList = productList
+            v-on:closeGalleryModal="closeGalleryModal"
+        />
     </div>
 </template>
 
@@ -47,6 +51,7 @@
 <script>
     import swal from 'sweetalert2'
     import cartModal from './cartModal'
+    import galleryModal from './galleryModal'
  
     var productList = [
         { 
@@ -56,6 +61,12 @@
             desc: 'Sony Xperia XZ1 là mẫu flagship kế tiếp của Sony tiếp nối sự thành công của chiếc Xperia XZs đã ra mắt trước đó với những nâng cấp nhẹ về mặt cấu hình và thiết kế.',
             price: 8990000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/01-1.jpg' ,
+                'src/assets/images/products/01-2.jpg',
+                'src/assets/images/products/01-3.jpg',
+                'src/assets/images/products/01-4.jpg'
+            ]
         },
         { 
             id: '2',
@@ -64,6 +75,12 @@
             desc: 'Sony mới đây đã âm thầm ra mắt mẫu smartphone tầm trung mới - Xperia XA2 Plus với màn hình lớn với thiết kế viền bezel mỏng trông hiện đại hơn các model khác trong cùng phân khúc.',
             price: 6490000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/02-1.jpg' ,
+                'src/assets/images/products/02-2.jpg',
+                'src/assets/images/products/02-3.jpg',
+                'src/assets/images/products/02-4.jpg'
+            ]
         },
         { 
             id: '3',
@@ -126,7 +143,8 @@
                 totalCart: 0,
                 totalPrice: 0,
                 showCart: false,
-                cartList: []
+                cartList: [],
+                showGallery: false
             }
         },
         created: function() {
@@ -329,11 +347,17 @@
                     }
                 })
                 
+            },
+            showGalleryModal: function(item){
+                this.showGallery = true;
+            },
+            closeGalleryModal: function(){
+                this.showGallery = false;
             }
-            
         },
         components: {
-            cartModal: cartModal
+            cartModal: cartModal,
+            galleryModal: galleryModal
         }
     } 
 
