@@ -5,20 +5,20 @@
                 <div class="thumb-imb"><img :src="item.img" :alt="item.name"></div>
                 <h3 class="name">{{item.name}}</h3>
                 <div class="action">
-                    <span class="qty-btn decrease">+</span>
+                    <span class="qty-btn increase" @click="selectAmount(item, 'increase')">+</span>
                     <span class="quantity">{{item.quantity}}</span>
-                    <span class="qty-btn decrease">-</span>
+                    <span class="qty-btn decrease" @click="selectAmount(item, 'decrease')">-</span>
                 </div>
                 <span class="price">{{number_format(item.price)}} đ</span>
-                <span class="remove">&times;</span>
+                <span class="remove" @click="onRemoveCart(item)">&times;</span>
             </li>
         </ul>
         <div class="wrap-cart">
             <div class="wrap-btn">
-                <button class="btn btn-clear">Remove all</button>
+                <button class="btn btn-clear" @click="onClearCart">Remove all</button>
                 <button class="btn btn-checkout">Check out</button>
             </div>
-            <div class="total">0 <small>đ</small></div>
+            <div class="total">{{number_format(totalPrice)}} <small>đ</small></div>
         </div>
     </div>
 </template>
@@ -28,20 +28,19 @@
 
     export default {
         name: 'cartModal',
-        props: [ 'cartList', 'number_format' ],
+        props: [ 'cartList', 'number_format', "clearCart", "removeCart", "selectAmount", "totalPrice" ],
         data (){
             return {
                 
             }
         },
-        updated() {
-            
-        },
-        computed: {
-
-        },
         methods: {
-            
+            onClearCart: function() {
+                this.$emit('clearCart');
+            },
+            onRemoveCart: function(item) {
+                this.$emit('removeCart', { 'id': item.id, 'quantity': item.quantity } );
+            }
         }
 	
     } 
@@ -55,8 +54,7 @@
         padding: 0.5em 1.5em;
     }
     .btn:hover{
-        background-color: #000;
-        color: #fff;
+        opacity: 0.7;
         transition: 0.3s ease;
     }
     #cart-modal{
@@ -88,10 +86,13 @@
     .cart-list li .price{
         font-size: 14px;
         margin-right: 10px;
+        width: 22%;
+        text-align: right;
     }
     .cart-list li .action{
         display: flex;
         margin-right: 10px;
+        width: 15%;
     }
     .cart-list li .name{
         width: 35%;
@@ -134,6 +135,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 10px;
     }
     .total{
         text-align: right;

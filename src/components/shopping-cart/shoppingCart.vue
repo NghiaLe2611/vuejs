@@ -2,14 +2,17 @@
     <div id="shopping-cart">
         <div class="header">
             <h2>{{title}}</h2>
-            <div class="cart" id="cart" @click="showCartModal" :class="{ open: showCart}">
-                <span class="cart-count">{{totalCart}}</span>
+            <div class="cart" id="cart" @click="showCartModal" :class="{ open: showCart }">
+                <span class="cart-count">{{getQuantity()}}</span>
                 <i class="fa fa-shopping-cart"></i>
                 <cartModal v-if="showCart"
                     :cartList = cartList
                     :number_format = number_format
+                    :selectAmount = selectAmount
+                    :totalPrice = totalPrice
+                    v-on:clearCart="clearCart"
+                    v-on:removeCart="removeCart"
                 />
-                
             </div>
         </div>
 
@@ -44,9 +47,10 @@
 <script>
     import swal from 'sweetalert2'
     import cartModal from './cartModal'
-
+ 
     var productList = [
         { 
+            id: '1',
             name: 'Sony Xperia XZ1',
             img: 'src/assets/images/products/01.png',
             desc: 'Sony Xperia XZ1 là mẫu flagship kế tiếp của Sony tiếp nối sự thành công của chiếc Xperia XZs đã ra mắt trước đó với những nâng cấp nhẹ về mặt cấu hình và thiết kế.',
@@ -54,6 +58,7 @@
             quantity: 1,
         },
         { 
+            id: '2',
             name: 'Sony Xperia XA2 Plus',
             img: 'src/assets/images/products/02.png',
             desc: 'Sony mới đây đã âm thầm ra mắt mẫu smartphone tầm trung mới - Xperia XA2 Plus với màn hình lớn với thiết kế viền bezel mỏng trông hiện đại hơn các model khác trong cùng phân khúc.',
@@ -61,6 +66,7 @@
             quantity: 1,
         },
         { 
+            id: '3',
             name: 'Sony Xperia XZ Premium',
             img: 'src/assets/images/products/03.png',
             desc: 'Sony Xperia XZ Premium là flagship của Sony trong năm 2017 với vẻ ngoài hào nhoáng, màn hình cao cấp cũng nhiều trang bị hàng đầu khác.',
@@ -68,6 +74,7 @@
             quantity: 1,
         },
         { 
+            id: '4',
             name: 'Sony Xperia XZ2',
             img: 'src/assets/images/products/04.png',
             desc: 'Xperia XZ2 là chiếc flagship mới được Sony giới thiệu tại MWC 2018 với sự thay đổi lớn về thiết kế so với những người tiền nhiệm.',
@@ -75,6 +82,7 @@
             quantity: 1,
         },
         { 
+            id: '5',
             name: 'Sony Xperia XZ1',
             img: 'src/assets/images/products/01.png',
             desc: 'Sony Xperia XZ1 là mẫu flagship kế tiếp của Sony tiếp nối sự thành công của chiếc Xperia XZs đã ra mắt trước đó với những nâng cấp nhẹ về mặt cấu hình và thiết kế.',
@@ -82,6 +90,7 @@
             quantity: 1,
         },
         { 
+            id: '6',
             name: 'Sony Xperia XA2 Plus',
             img: 'src/assets/images/products/02.png',
             desc: 'Sony mới đây đã âm thầm ra mắt mẫu smartphone tầm trung mới - Xperia XA2 Plus với màn hình lớn với thiết kế viền bezel mỏng trông hiện đại hơn các model khác trong cùng phân khúc.',
@@ -89,6 +98,7 @@
             quantity: 1,
         },
         { 
+            id: '7',
             name: 'Sony Xperia XZ Premium',
             img: 'src/assets/images/products/03.png',
             desc: 'Sony Xperia XZ Premium là flagship của Sony trong năm 2017 với vẻ ngoài hào nhoáng, màn hình cao cấp cũng nhiều trang bị hàng đầu khác.',
@@ -96,6 +106,7 @@
             quantity: 1,
         },
         { 
+            id: '8',
             name: 'Sony Xperia XZ2',
             img: 'src/assets/images/products/04.png',
             desc: 'Xperia XZ2 là chiếc flagship mới được Sony giới thiệu tại MWC 2018 với sự thay đổi lớn về thiết kế so với những người tiền nhiệm.',
@@ -113,12 +124,20 @@
                 title: 'Mobile Shopping Cart',
                 productList: productList,
                 totalCart: 0,
+                totalPrice: 0,
                 showCart: false,
                 cartList: []
             }
         },
         created: function() {
             document.addEventListener('click', this.documentClick);
+        },
+        updated: function() {
+            var total = this.cartList.reduce(function (qty, item) {
+                return qty + item.quantity*item.price; 
+            }, 0);
+           
+           this.totalPrice = total;
         },
         methods: {
             documentClick(e){
@@ -173,16 +192,33 @@
             changeQty: function(index, item){
                 item.quantity = parseInt(this.$refs.amount[index].value);
             },
+            getQuantity: function(){
+                var total = 0;
+                var _this = this;
+
+                this.cartList.forEach(function(item){
+                    total += item.quantity;
+                    _this.totalCart = total;
+                });
+                return total;
+            },
+            getTotal: function(){
+                var total = 0;
+                var _this = this;
+
+                this.cartList.forEach(function(item){
+                    total += item.price*item.quantity;
+                    _this.totalPrice = total;
+                });
+                return total;
+            },
             addToCart: function(event, item){
 
                 //Add item to cart
                 var cartList = this.cartList;
-                
-                // var isExist = cartList.some(function(el){ 
-                //     return el.name === item.name;
-                // });
 
                 var cartItem = {
+                    id: item.id,
                     name: item.name,
                     img: item.img,
                     desc: item.desc,
@@ -191,25 +227,24 @@
                 };
 
                 var isExist = false;
+                var total = 0;
 
                 for(var i = 0; i < cartList.length; i++){
                     if(cartList[i].name === cartItem.name){
                         cartList[i].quantity += item.quantity;
                         //return false;
-                        isExist = true;
+                        isExist = true; 
                         break;
                     }
                 }   
 
-                // var total = this.cartList.reduce(function (qty, item) {
-                //      return qty + item.quantity; 
-                // }, 0);
-
                 if(!isExist){
                     cartList.push(cartItem);
                 } 
-                this.totalCart += item.quantity;
-              
+
+                this.totalCart = this.getQuantity;
+                this.totalPrice = this.getTotal();
+
                 //Fly to cart
                 var el = $(event.target);
                 var item = $(el).closest('.item');
@@ -247,6 +282,53 @@
 				setTimeout(function () { 
                     $('#cart').removeClass('shaking');
                 }, 1000);
+            },
+            clearCart: function(){
+                swal({
+                    title: 'Are you sure?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, remove all!'
+                }).then((result) => {
+                    if (result.value) {
+                        this.cartList = [];
+                        this.totalCart = 0;
+                        swal(
+                            'Deleted!',
+                            'Your cart has been empty !',
+                            'success'
+                        )
+                    }
+                })
+                
+            },
+            removeCart: function(item){
+                swal({
+                    title: 'Are you sure?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, remove it!'
+                }).then((result) => {
+                    if (result.value) {
+                        var index = this.cartList.map(function(el) {
+                            return el.id
+                        }).indexOf(item.id);
+                        
+                        this.totalCart -= item.quantity;
+                        this.cartList.splice(index, 1);
+                       
+                        swal(
+                            'Deleted!',
+                            'Item has been removed !',
+                            'success'
+                        )
+                    }
+                })
+                
             }
             
         },
@@ -293,6 +375,7 @@
         align-items: center;
         cursor: pointer;
         z-index: 10;
+        transition: width 0.2s ease;
     }
     .cart.open{
         width: 450px;
