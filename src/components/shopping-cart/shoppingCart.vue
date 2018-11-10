@@ -42,6 +42,9 @@
         </div>
         <galleryModal v-if="showGallery"
             :productList = productList
+            :showGallery = showGallery
+            :activeGallery = activeGallery
+            v-on:showGalleryModal="showGalleryModal"
             v-on:closeGalleryModal="closeGalleryModal"
         />
     </div>
@@ -144,7 +147,8 @@
                 totalPrice: 0,
                 showCart: false,
                 cartList: [],
-                showGallery: false
+                showGallery: false,
+                activeGallery: ''
             }
         },
         created: function() {
@@ -349,9 +353,11 @@
                 
             },
             showGalleryModal: function(item){
+                this.activeGallery = item;
                 this.showGallery = true;
             },
             closeGalleryModal: function(){
+                this.activeGallery = '';
                 this.showGallery = false;
             }
         },

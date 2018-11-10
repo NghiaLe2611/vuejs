@@ -1,19 +1,21 @@
 <template>
-    <div id="gallery-modal" class="animate">
-        <div class="modal-container">
-            <span class="closed" @click="closeModal">&times;</span>
-            <div class="modal-content" v-for="(item, index) in productList" :key="index">
-                <div class="wrap-img">
-                    <img :src="item.img" :alt="item.name">
+    <transition name="modal">
+        <div id="gallery-modal">
+            <div class="modal-container">
+                <span class="closed" @click="closeModal">&times;</span>
+                <div class="modal-content">
+                    <div class="wrap-img">
+                        <img :src="activeGallery.img" :alt="activeGallery.name">
+                    </div>
+                    <ul class="wrap-gallery">
+                        <li v-for="(href, index) in activeGallery.gallery" :key="index">
+                            <img :src="href">
+                        </li>
+                    </ul>
                 </div>
-                <ul class="wrap-gallery">
-                    <li v-for="(img, index) in item.gallery" :key="index">
-                        <img :src="img">
-                    </li>
-                </ul>
             </div>
         </div>
-    </div>
+    </transition>
 </template>
 
 
@@ -21,44 +23,50 @@
 
     export default {
         name: 'galleryModal',
-        props: ["productList", "closeGalleryModal"],
+        props: ["productList", "showGalleryModal", "closeGalleryModal", "showGallery", "activeGallery"],
         data (){
             return {
                 
             }
         },
+        created: function() {
+            document.addEventListener('click', this.documentClick);
+        },
         methods: {
-            
+            documentClick(e){
+                if (e.target.closest('#gallery-modal') == null ) {
+                    this.closeModal();
+                } 
+            },
             closeModal: function(){
                 this.$emit('closeGalleryModal');
-            }
+            },
         }
-	
     } 
 
 </script>
 
 <style scoped>
+    /* .modal-enter-active{
+        animation: openUp 0.3s;
+    }
+    .modal-leave-active{
+        animation: openUp 0.3s reverse;
+    } */
+    .modal-enter-active, .modal-leave-active {
+        transition: opacity .3s;
+    }
+    .modal-enter, .modal-leave-to {
+        opacity: 0;
+    }
     @keyframes openUp {
         0% {
             opacity: 0;
             transform: translate(-50%, -50%) scale(0.5);
         }
-
         100% {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
-        }
-    }
-    @keyframes closeUp {
-        0% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        100% {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0);
         }
     }
     #gallery-modal{
@@ -69,28 +77,25 @@
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
         background: #fff;
-        padding: 2em;
+        padding: 2.5em;
         text-align: center;
+        width: 400px;
         max-height: calc(100% - 2em);
         z-index: 3;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
     }
-    .animate{
-        animation: openUp 0.3s;
-    }
     .closed{
         position: absolute;
         right: 10px;
-        top: 10px;
+        top: 5px;
         font-size: 40px;
+        color: #adacac;
         cursor: pointer;
     }
     .wrap-img{
-        width: 300px;
-        height: 300px;
-        margin: 0 auto;
-        border: 1px solid #ccc;
+        margin: 0 auto 15px auto;
+        border: 1px solid #dfdfdf;
     }
     .wrap-img img{
         max-width: 100%;
@@ -102,56 +107,18 @@
     }
     .wrap-gallery li{
         flex: 1;
+        cursor: pointer;
+        border: 1px solid #dfdfdf;
+        border-radius: 4px;
+        padding: 5px;
     }
-
-    .no-animate{
-        animation: none;
+    .wrap-gallery li:not(:last-child){
+        margin-right: 3px;
     }
-    #gallery-modal.zoomIn {
-        -webkit-animation-name: zoomIn;
-        animation-name: zoomIn;
-    }
-    @keyframes zoomIn {
-        from {
-            opacity: 0;
-            -webkit-transform: scale3d(0.3, 0.3, 0.3);
-            transform: scale3d(0.3, 0.3, 0.3);
-        }
-        50% {
-            opacity: 1;
-        }
-    }
-
-    @-webkit-keyframes zoomOut {
-        from {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0;
-            -webkit-transform: scale3d(0.3, 0.3, 0.3);
-            transform: scale3d(0.3, 0.3, 0.3);
-        }
-        to {
-            opacity: 0;
-        }
-    }
-
-    @keyframes zoomOut {
-        from {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0;
-            -webkit-transform: scale3d(0.3, 0.3, 0.3);
-            transform: scale3d(0.3, 0.3, 0.3);
-        }
-        to {
-            opacity: 0;
-        }
-    }
-
-    .zoomOut {
-        -webkit-animation-name: zoomOut;
-        animation-name: zoomOut;
+     .wrap-gallery li.active{
+        border-color: #adacac;
+     }
+    .wrap-gallery li:hover{
+        opacity: 0.8;
     }
 </style>
