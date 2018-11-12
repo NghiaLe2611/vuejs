@@ -32,7 +32,7 @@
                                 <label for="qty">QTY</label>
                                 <span class="qty-btn decrease" @click="selectAmount(item, 'decrease')">-</span>
                                 <input type="text" class="quantity" ref="amount" :value="item.quantity" @keyup="changeQty(index, item)">
-                                <span class="qty-btn increase" @click="0(item, 'increase')">+</span>
+                                <span class="qty-btn increase" @click="selectAmount(item, 'increase')">+</span>
                             </p>
                             <button class="btn btn-cart" @click="addToCart($event, item)">Add to cart</button>
                          </div>
@@ -92,6 +92,12 @@
             desc: 'Sony Xperia XZ Premium là flagship của Sony trong năm 2017 với vẻ ngoài hào nhoáng, màn hình cao cấp cũng nhiều trang bị hàng đầu khác.',
             price: 11490000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/03-1.jpg' ,
+                'src/assets/images/products/03-2.jpg',
+                'src/assets/images/products/03-3.jpg',
+                'src/assets/images/products/03-4.jpg'
+            ]
         },
         { 
             id: '4',
@@ -100,6 +106,12 @@
             desc: 'Xperia XZ2 là chiếc flagship mới được Sony giới thiệu tại MWC 2018 với sự thay đổi lớn về thiết kế so với những người tiền nhiệm.',
             price: 11990000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/04-1.jpg' ,
+                'src/assets/images/products/04-2.jpg',
+                'src/assets/images/products/04-3.jpg',
+                'src/assets/images/products/04-4.jpg'
+            ]
         },
         { 
             id: '5',
@@ -108,6 +120,12 @@
             desc: 'Sony Xperia XZ1 là mẫu flagship kế tiếp của Sony tiếp nối sự thành công của chiếc Xperia XZs đã ra mắt trước đó với những nâng cấp nhẹ về mặt cấu hình và thiết kế.',
             price: 8990000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/01-1.jpg' ,
+                'src/assets/images/products/01-2.jpg',
+                'src/assets/images/products/01-3.jpg',
+                'src/assets/images/products/01-4.jpg'
+            ]
         },
         { 
             id: '6',
@@ -116,6 +134,12 @@
             desc: 'Sony mới đây đã âm thầm ra mắt mẫu smartphone tầm trung mới - Xperia XA2 Plus với màn hình lớn với thiết kế viền bezel mỏng trông hiện đại hơn các model khác trong cùng phân khúc.',
             price: 6490000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/02-1.jpg' ,
+                'src/assets/images/products/02-2.jpg',
+                'src/assets/images/products/02-3.jpg',
+                'src/assets/images/products/02-4.jpg'
+            ]
         },
         { 
             id: '7',
@@ -124,6 +148,12 @@
             desc: 'Sony Xperia XZ Premium là flagship của Sony trong năm 2017 với vẻ ngoài hào nhoáng, màn hình cao cấp cũng nhiều trang bị hàng đầu khác.',
             price: 11490000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/03-1.jpg' ,
+                'src/assets/images/products/03-2.jpg',
+                'src/assets/images/products/03-3.jpg',
+                'src/assets/images/products/03-4.jpg'
+            ]
         },
         { 
             id: '8',
@@ -132,6 +162,12 @@
             desc: 'Xperia XZ2 là chiếc flagship mới được Sony giới thiệu tại MWC 2018 với sự thay đổi lớn về thiết kế so với những người tiền nhiệm.',
             price: 11990000,
             quantity: 1,
+            gallery: [
+                'src/assets/images/products/04-1.jpg' ,
+                'src/assets/images/products/04-2.jpg',
+                'src/assets/images/products/04-3.jpg',
+                'src/assets/images/products/04-4.jpg'
+            ]
         }
     ];
 

@@ -8,7 +8,7 @@
                         <img :src="activeGallery.img" :alt="activeGallery.name">
                     </div>
                     <ul class="wrap-gallery">
-                        <li v-for="(href, index) in activeGallery.gallery" :key="index">
+                        <li v-for="(href, index) in activeGallery.gallery" :key="index" @click="changeImg($event)">
                             <img :src="href">
                         </li>
                     </ul>
@@ -41,6 +41,11 @@
             closeModal: function(){
                 this.$emit('closeGalleryModal');
             },
+            changeImg: function(event){
+                var href = event.target.getAttribute('src');
+                var mainImg = document.querySelector('.modal-content .wrap-img img');
+                mainImg.setAttribute('src', href);
+            }
         }
     } 
 
@@ -96,14 +101,20 @@
     .wrap-img{
         margin: 0 auto 15px auto;
         border: 1px solid #dfdfdf;
+        width: 320px;
+        height: 410px;
+        display: flex;
+        align-items: center;
     }
     .wrap-img img{
-        max-width: 100%;
+        /* max-width: 100%;
         max-height: 100%;
-        object-fit: contain;
+        object-fit: contain; */
+        width: 100%;
     }
     .wrap-gallery{
         display: flex;
+        flex-wrap: wrap;
     }
     .wrap-gallery li{
         flex: 1;
@@ -112,12 +123,15 @@
         border-radius: 4px;
         padding: 5px;
     }
+    .wrap-gallery li img{
+        width: 100%;
+    }
     .wrap-gallery li:not(:last-child){
         margin-right: 3px;
     }
-     .wrap-gallery li.active{
+    .wrap-gallery li.active{
         border-color: #adacac;
-     }
+    }
     .wrap-gallery li:hover{
         opacity: 0.8;
     }
