@@ -16,7 +16,7 @@
         <div class="wrap-cart">
             <div class="wrap-btn">
                 <button class="btn btn-clear" @click="onClearCart">Remove all</button>
-                <button class="btn btn-checkout">Check out</button>
+                <button class="btn btn-checkout" @click="onCheckout">Check out</button>
             </div>
             <div class="total">{{number_format(totalPrice)}} <small>đ</small></div>
         </div>
@@ -40,6 +40,9 @@
             },
             onRemoveCart: function(item) {
                 this.$emit('removeCart', { 'id': item.id, 'quantity': item.quantity } );
+            },
+            onCheckout: function() {
+                this.$emit('checkout');
             }
         }
 	

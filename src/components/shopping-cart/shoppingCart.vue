@@ -10,8 +10,9 @@
                     :number_format = number_format
                     :selectAmount = selectAmount
                     :totalPrice = totalPrice
-                    v-on:clearCart="clearCart"
-                    v-on:removeCart="removeCart"
+                    v-on:clearCart = "clearCart"
+                    v-on:removeCart = "removeCart"
+                    v-on:checkout = "checkout"
                 />
             </div>
         </div>
@@ -395,6 +396,28 @@
             closeGalleryModal: function(){
                 this.activeGallery = '';
                 this.showGallery = false;
+            },
+            checkout: function(){
+                 swal({
+                    title: 'Are you sure?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, checkout it!'
+                }).then((result) => {
+                    if (result.value) {
+                        
+                        this.totalCart = 0;
+                        this.cartList = [];
+                       
+                        swal(
+                            'Checkout successful!',
+                            'Thanks for your purchase !',
+                            'success'
+                        )
+                    }
+                })
             }
         },
         components: {
