@@ -1,7 +1,9 @@
 {
   "extends": [
-    "eslint:recommmend",
-    "plugin:vue/recommended"
+    "plugin:vue/essential"
+  ],
+  "plugins": [
+    "vue"
   ],
   "env": {
     "browser": true,
@@ -12,7 +14,8 @@
   "parserOptions": {
     "parser": "babel-eslint",
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
+      "experimentalObjectRestSpread": true
     },
     "sourceType": "module"
   },

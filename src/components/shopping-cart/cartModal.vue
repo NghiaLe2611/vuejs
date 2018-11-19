@@ -29,11 +29,7 @@
     export default {
         name: 'cartModal',
         props: [ 'cartList', 'number_format', "clearCart", "removeCart", "selectAmount", "totalPrice" ],
-        data (){
-            return {
-                
-            }
-        },
+
         methods: {
             onClearCart: function() {
                 this.$emit('clearCart');

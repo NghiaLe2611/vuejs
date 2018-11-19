@@ -53,10 +53,10 @@
 
 
 <script>
-    import swal from 'sweetalert2'
-    import cartModal from './cartModal'
-    import galleryModal from './galleryModal'
- 
+    import swal from 'sweetalert2';
+    import cartModal from './cartModal';
+    import galleryModal from './galleryModal';
+    
     var productList = [
         { 
             id: '1',
@@ -186,7 +186,7 @@
                 cartList: [],
                 showGallery: false,
                 activeGallery: ''
-            }
+            };
         },
         created: function() {
             document.addEventListener('click', this.documentClick);
