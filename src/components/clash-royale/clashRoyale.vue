@@ -75,12 +75,33 @@
                                 <span class="close-btn">&times;</span> 
                                 <div class="card-info">
                                     <div class="name-info">
-                                        <div :class="{'card-img': true, 'card-image-hexagon': this.selectedRarity == 'Legend',  'card-image': this.selectedRarity != 'Legend'}">
+                                        <!-- <div :class="{'card-img': true, 'card-image-hexagon': this.selectedRarity == 'Legendary',  'card-image': this.selectedRarity != 'Legendary'}">
+                                            <img id="card-image" src=""/>
+                                            <div class="elixir">
+                                                <span>{{selectedEli}}</span>
+                                            </div>
+                                        </div> -->
+                                        
+                                        <div v-if="this.selectedRarity != 'Legendary'" class="card-img card-image">
                                             <img id="card-image" src=""/>
                                             <div class="elixir">
                                                 <span>{{selectedEli}}</span>
                                             </div>
                                         </div>
+                                        <div v-else>
+                                            <svg class="clip-svg">
+                                                <defs>
+                                                    <clipPath id="clip-hexagon" clipPathUnits="objectBoundingBox">
+                                                        <polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />
+                                                    </clipPath>
+                                                </defs>
+                                            </svg>
+
+                                            <div class="polygon-wrap card-image-hexagon">
+                                                <img id="card-image" src="" class="hexagon">
+                                            </div>    
+                                        </div>
+                                        
 
                                         <div class="card-name-container">
                                             <div class="card-name-wrapper" :style="getStyles">
@@ -122,7 +143,7 @@
             return {
                 title: 'Clash Royale Maker',
                 level: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-                rarity: ['Common', 'Rare', 'Epic', 'Legend'],
+                rarity: ['Common', 'Rare', 'Epic', 'Legendary'],
                 types: ['Troop', 'Building', 'Spell'],
                 eli: ['?', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 propList: [
@@ -163,7 +184,7 @@
                         backgroundColor: '#CC33FF'
                     };
                 } 
-                if(this.selectedRarity === 'Legend'){
+                if(this.selectedRarity === 'Legendary'){
                     style = {
                         backgroundColor: '#65BABA'
                     };
@@ -347,13 +368,30 @@
         position: relative;
     }
     .card-image-hexagon {
+        margin-top: -15px;
         position: relative;
-        width: 130px;
-        height: 180px;
+        width: 135px;
+        height: 200px;
         background: url('../../assets/images/cr/hexagon.png') no-repeat;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .card-image-hexagon img{
-        width: 60%;
+        width: 127px;
+        height: 100%;
+        max-width: initial;
+    }
+    .clip-svg {
+        width: 0;
+        height: 0;
+    }
+    .hexagon {
+        -webkit-clip-path: polygon(50% 4%, 106% 24%, 102% 78%, 50% 97%, 0% 78%, -5% 25%);
+        clip-path: polygon(50% 4%, 106% 24%, 102% 78%, 50% 97%, 0% 78%, -5% 25%);
+        /* -webkit-clip-path: url("#clip-hexagon");
+        clip-path: url("#clip-hexagon"); */
     }
     .card-name-container {
         float: left;
