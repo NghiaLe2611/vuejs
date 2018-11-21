@@ -10,6 +10,7 @@ import advancedTodo from './components/advancedTodo';
 import filterSearch from './components/filterSearch';
 import checkOut from './components/checkOut';
 import shoppingCart from './components/shopping-cart/shoppingCart';
+import clashRoyale from './components/clash-royale/clashRoyale';
 
 //window.$ = window.jQuery = jQuery;
 
@@ -25,7 +26,8 @@ const routes = [
 	{ path: '/advancedTodo', component: advancedTodo },
 	{ path: '/filterSearch', component: filterSearch },
 	{ path: '/checkout', component: checkOut },
-	{ path: '/shoppingCart', component: shoppingCart }
+	{ path: '/shoppingCart', component: shoppingCart },
+	{ path: '/clashRoyale', component: clashRoyale }
 ];
 
 const router = new VueRouter({

@@ -1,10 +1,6 @@
 {
-  "extends": [
-    "plugin:vue/essential"
-  ],
-  "plugins": [
-    "vue"
-  ],
+  "extends": ["plugin:vue/essential"],
+  "plugins": ["vue"],
   "env": {
     "browser": true,
     "commonjs": true,

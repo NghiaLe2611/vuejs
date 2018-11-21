@@ -13,17 +13,8 @@
     </div>
 </template>
 
-
 <script>
-    import imageGenerator from './components/imageGenerator'
-    import vueQuiz from './components/vueQuiz'
-    import tab from './components/tab'
-    import todo from './components/todo'
-    import advancedTodo from './components/advancedTodo'
-    import filterSearch from './components/filterSearch'
-    import checkOut from './components/checkOut'
-    import shoppingCart from './components/shopping-cart/shoppingCart'
-
+   
     export default {
         name: 'app',
         data () {
@@ -37,19 +28,10 @@
                     { name: 'Advanced todo app', link: 'advancedTodo' },
                     { name: 'Filter search', link: 'filterSearch' },
                     { name: 'Simple checkout', link: 'checkout' },
-                    { name: 'Mobile shopping cart', link: 'shoppingCart' }
+                    { name: 'Mobile shopping cart', link: 'shoppingCart' },
+                    { name: 'Clash Royale Maker', link: 'clashRoyale' }
                 ]
             }
-        },
-        components: {
-            imageGenerator: imageGenerator,
-            vueQuiz: vueQuiz,
-            tab: tab,
-            todo: todo,
-            advancedTodo: advancedTodo,
-            filterSearch: filterSearch,
-            checkOut: checkOut,
-            shoppingCart: shoppingCart
         }
     }
 
@@ -153,5 +135,6 @@
             transform: translate3d(4px, 0, 0);
         }
     }
+
 
 </style>
