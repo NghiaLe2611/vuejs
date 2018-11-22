@@ -48,7 +48,7 @@
                                         ...<input type="file" id="image" accept="image/*" v-on:change="chooseImage" />
                                     </span>
                                 </label>
-                                <p class="form-control" id="filename"></p>
+                                <p class="form-control" id="filename">{{image}}</p>
                                 <p class="note">Select an image that represents your card.</p> 
                             </div>
                             <div class="form-group">
@@ -62,9 +62,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        <tr v-for="(item, index) in addedProp" :key="index">
+                                            <td>{{item.name}}</td>
+                                            <td>{{item.value}}</td>
+                                            <td><img class="icon-prop" :src="item.icon" :alt="item.name"/></td>
+                                            <td>
+                                                <button class="btn btn-red remove-prop" @click="removeProp($event, item)"><i class="fas fa-times"></i></button>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-yellow add-prop" @click="showPropModal">Add card property</button>
                             </div>
                         </form>
                     </div>
@@ -72,36 +82,15 @@
                         <div class="cr-result">
                             <div class="card-block">
                                 <h2 class="level">{{name}} Level {{selectedLevel}}</h2>
-                                <span class="close-btn">&times;</span> 
+                                <span class="btn-red close-btn"><i class="fas fa-times"></i></span> 
                                 <div class="card-info">
                                     <div class="name-info">
-                                        <!-- <div :class="{'card-img': true, 'card-image-hexagon': this.selectedRarity == 'Legendary',  'card-image': this.selectedRarity != 'Legendary'}">
-                                            <img id="card-image" src=""/>
-                                            <div class="elixir">
-                                                <span>{{selectedEli}}</span>
-                                            </div>
-                                        </div> -->
-                                        
-                                        <div v-if="this.selectedRarity != 'Legendary'" class="card-img card-image">
+                                        <div :class="{'card-img': true, 'card-image-hexagon': this.selectedRarity == 'Legend',  'card-image': this.selectedRarity != 'Legend'}">
                                             <img id="card-image" src=""/>
                                             <div class="elixir">
                                                 <span>{{selectedEli}}</span>
                                             </div>
                                         </div>
-                                        <div v-else>
-                                            <svg class="clip-svg">
-                                                <defs>
-                                                    <clipPath id="clip-hexagon" clipPathUnits="objectBoundingBox">
-                                                        <polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-
-                                            <div class="polygon-wrap card-image-hexagon">
-                                                <img id="card-image" src="" class="hexagon">
-                                            </div>    
-                                        </div>
-                                        
 
                                         <div class="card-name-container">
                                             <div class="card-name-wrapper" :style="getStyles">
@@ -119,23 +108,41 @@
                                         </div>
                                     </div>
                                     <div class="stats-info">
-
+                                        <div class="stats-container">
+                                            <div class="prop-item" v-for="(item, index) in addedProp" :key="index">
+                                                <div class="item-icon">
+                                                    <img class="result-icon" :src="item.icon" :alt="item.name" />
+                                                </div>
+                                                <div class="item-info">
+                                                    <span class="result-name">{{item.name}}</span>
+                                                    <span class="result-value">{{item.value}}</span>                                         
+                                                </div> 
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="save">
-                                <button class="btn-yellow save-btn">Save</button>
+                                <button class="btn btn-yellow save-btn">Save</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <propertiesModal
+            :showModal = showModal
+            v-on:closeModal = closeModal
+            v-on:addProp = addProp
+        >
+        </propertiesModal>
     </div>
 </template>
 
 
 <script>
+
+    import propertiesModal from './propertiesModal';
 
     export default {
         name: 'clashRoyaleMaker',
@@ -143,20 +150,9 @@
             return {
                 title: 'Clash Royale Maker',
                 level: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-                rarity: ['Common', 'Rare', 'Epic', 'Legendary'],
+                rarity: ['Common', 'Rare', 'Epic', 'Legend'],
                 types: ['Troop', 'Building', 'Spell'],
                 eli: ['?', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                propList: [
-                    { id: 1, name: 'Hitpoints', url: 'src/assets/images/cr/prop/hp.png'},
-                    { id: 2, name: 'Damage', url: 'src/assets/images/cr/prop/damage.png'},
-                    { id: 3, name: 'DPS', url: 'src/assets/images/cr/prop/dps.png'},
-                    { id: 4, name: 'Area Damage', url: 'src/assets/images/cr/prop/area.png'},
-                    { id: 5, name: 'Tower Damage', url: 'src/assets/images/cr/prop/tower.png'},
-                    { id: 6, name: 'Hit Speed', url: 'src/assets/images/cr/prop/hit.png'},
-                    { id: 7, name: 'Targets', url: 'src/assets/images/cr/prop/target.png'},
-                    { id: 8, name: 'Speed', url: 'src/assets/images/cr/prop/speed.png'},
-                    { id: 9, name: 'Range', url: 'src/assets/images/cr/prop/range.png'}
-                ],
                 name: '',
                 selectedLevel: 1,
                 selectedRarity: 'Common',
@@ -164,6 +160,8 @@
                 selectedEli: '?',
                 description: '',
                 image: '',
+                showModal: false,
+                addedProp: []
             }
         },
         computed: {
@@ -184,7 +182,7 @@
                         backgroundColor: '#CC33FF'
                     };
                 } 
-                if(this.selectedRarity === 'Legendary'){
+                if(this.selectedRarity === 'Legend'){
                     style = {
                         backgroundColor: '#65BABA'
                     };
@@ -193,7 +191,16 @@
                 return style;
             }
         },
+        created: function() {
+            document.addEventListener('click', this.documentClick);
+        },
         methods: {
+            documentClick(e){
+                var self = this;
+                if (e.target.closest('#modal, .add-prop') == null ) {
+                    self.showModal = false;
+                } 
+            },
             readURL: function(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -207,14 +214,81 @@
                 }
             },
             chooseImage: function(e){
+                var filename = e.target.value.split('\\').pop();
+                this.image = filename;
                 this.readURL(e.target);
+            },
+            showPropModal: function(){
+                this.showModal = true;
+            },
+            closeModal: function(){
+                this.showModal = false;
+            },
+            addProp: function(items){
+                this.addedProp = items;
+            },
+            removeProp: function(e, item){
+                e.preventDefault();
+                this.addedProp.splice(this.addedProp.indexOf(item), 1);
             }
+        },
+        components: {
+            propertiesModal: propertiesModal
         }
 	
     } 
 
 </script>
 
+<style>
+     .btn{
+        border: none;
+        outline: none;
+        border-radius: 4px;
+    }
+     .btn-yellow {
+        background-color: #FFD053;
+        background: -webkit-gradient(linear,left top, left bottom,color-stop(5%, #FFD053),to(#FFBC2B));
+        background: -webkit-linear-gradient(top,#FFD053 5%,#FFBC2B 100%);
+        background: -o-linear-gradient(top,#FFD053 5%,#FFBC2B 100%);
+        background: linear-gradient(to bottom,#FFD053 5%,#FFBC2B 100%);
+        -webkit-box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+        box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+        color: #FFC;
+        text-shadow: -1px 2px 0 #582d00, 0 2px 0 #582d00, 1px 2px 0 #582d00, -1px -1px 0 #582d00, 1px -1px 0 #582d00, -1px 1px 0 #582d00, 1px 1px 0 #582d00;
+    }
+    .btn-yellow:hover, 
+    .btn-yellow:focus, 
+    .btn-yellow:active {
+        border-color: transparent !important;
+        outline: none !important;
+        color: #fff !important;
+        background-color: #FFD053 !important;
+        -webkit-box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+        box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+    }
+    .btn-yellow:active,
+    .btn-red:active{
+        position: relative;
+        top: 2px;
+    }
+    .btn-red{
+        background-color: #FC4144;
+        -webkit-box-shadow: 0 0 3px 0 #FC4144, 0 0 0 4px #E72424, 0 1px 0 4px #E72424, 0 -1px 2px 4px #FE4A5D, 0 -2px 0 5px #EC8A95, 0 6px 0 4px #9C1414, 0 3px 0 5px #9C1414, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+        box-shadow: 0 0 3px 0 #FC4144, 0 0 0 4px #E72424, 0 1px 0 4px #E72424, 0 -1px 2px 4px #FE4A5D, 0 -2px 0 5px #EC8A95, 0 6px 0 4px #9C1414, 0 3px 0 5px #9C1414, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+        color: #fff;
+        text-shadow: -1px 2px 0 #000, 0 2px 0 #000, 1px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    }
+    .btn-red:hover, .btn-red:focus, 
+    .btn-red:active {
+        border-color: transparent !important;
+        outline: none !important;
+        color: #fff !important;
+        background-color: #FC4144 !important;
+        -webkit-box-shadow: 0 0 3px 0 #FC4144, 0 0 0 4px #E72424, 0 1px 0 4px #E72424, 0 -1px 2px 4px #FE4A5D, 0 -2px 0 5px #EC8A95, 0 6px 0 4px #9C1414, 0 3px 0 5px #9C1414, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+        box-shadow: 0 0 3px 0 #FC4144, 0 0 0 4px #E72424, 0 1px 0 4px #E72424, 0 -1px 2px 4px #FE4A5D, 0 -2px 0 5px #EC8A95, 0 6px 0 4px #9C1414, 0 3px 0 5px #9C1414, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
+    }
+</style>
 <style scoped>
     .wrap{
         background: url('../../assets/images/bg.jpg') repeat;
@@ -261,6 +335,9 @@
         align-items: center;
         margin-bottom: 20px;
     }
+    .form-group:last-of-type{
+        justify-content: flex-end;
+    }
     .form-group .label{
         margin-right: 20px;
         min-width: 120px;
@@ -285,7 +362,7 @@
     }
     .properties{
         width: 100%;
-        margin: 20px 0 0 20px;
+        margin: 40px 0 20px 65px;
     }
     .properties thead {
         border-bottom: 2px solid #fff;
@@ -368,30 +445,13 @@
         position: relative;
     }
     .card-image-hexagon {
-        margin-top: -15px;
         position: relative;
-        width: 135px;
-        height: 200px;
+        width: 130px;
+        height: 180px;
         background: url('../../assets/images/cr/hexagon.png') no-repeat;
-        background-size: cover;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
     .card-image-hexagon img{
-        width: 127px;
-        height: 100%;
-        max-width: initial;
-    }
-    .clip-svg {
-        width: 0;
-        height: 0;
-    }
-    .hexagon {
-        -webkit-clip-path: polygon(50% 4%, 106% 24%, 102% 78%, 50% 97%, 0% 78%, -5% 25%);
-        clip-path: polygon(50% 4%, 106% 24%, 102% 78%, 50% 97%, 0% 78%, -5% 25%);
-        /* -webkit-clip-path: url("#clip-hexagon");
-        clip-path: url("#clip-hexagon"); */
+        width: 60%;
     }
     .card-name-container {
         float: left;
@@ -449,33 +509,6 @@
         text-shadow: none;
         line-height: 1.4;
     }
-    .btn-yellow {
-        border: none;
-        outline: none;
-        background-color: #FFD053;
-        background: -webkit-gradient(linear,left top, left bottom,color-stop(5%, #FFD053),to(#FFBC2B));
-        background: -webkit-linear-gradient(top,#FFD053 5%,#FFBC2B 100%);
-        background: -o-linear-gradient(top,#FFD053 5%,#FFBC2B 100%);
-        background: linear-gradient(to bottom,#FFD053 5%,#FFBC2B 100%);
-        -webkit-box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
-        box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
-        color: #FFC;
-        text-shadow: -1px 2px 0 #582d00, 0 2px 0 #582d00, 1px 2px 0 #582d00, -1px -1px 0 #582d00, 1px -1px 0 #582d00, -1px 1px 0 #582d00, 1px 1px 0 #582d00;
-    }
-    .btn-yellow:hover, 
-    .btn-yellow:focus, 
-    .btn-yellow:active {
-        border-color: transparent !important;
-        outline: none !important;
-        color: #fff !important;
-        background-color: #FFD053 !important;
-        -webkit-box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
-        box-shadow: 0 2px 3px 0 #FF8907, 0 0 0 4px #FFA80C, 0 1px 0 4px #FFA80C, 0 -1px 2px 4px #FFD525, 0 -2px 0 5px #F4E684, 0 6px 0 4px #B06904, 0 3px 0 5px #F4E684, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
-    }
-    .btn-yellow:active{
-        position: relative;
-        top: 2px;
-    }
     .close-btn {
         font-size: 18px;
         padding: 5px 8px;
@@ -485,19 +518,9 @@
         height: 13px;
         width: 17px;
         border-radius: 3px;
-        display: -ms-flexbox;
         display: flex;
-        -ms-flex-align: center;
         align-items: center;
-        -ms-flex-pack: center;
         justify-content: center;
-        background: -webkit-gradient(linear, left top, left bottom, from(#FF0808), to(#FF584D));
-        background: -webkit-linear-gradient(top, #FF0808 0%, #FF584D 100%);
-        background: -o-linear-gradient(top, #FF0808 0%, #FF584D 100%);
-        background: linear-gradient(to bottom, #FF0808 0%, #FF584D 100%);
-        -webkit-box-shadow: 0 0 3px 0 #FC4144, 0 0 0 4px #E72424, 0 1px 0 4px #E72424, 0 -1px 2px 4px #FE4A5D, 0 -2px 0 5px #EC8A95, 0 6px 0 4px #9C1414, 0 3px 0 5px #9C1414, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
-        box-shadow: 0 0 3px 0 #FC4144, 0 0 0 4px #E72424, 0 1px 0 4px #E72424, 0 -1px 2px 4px #FE4A5D, 0 -2px 0 5px #EC8A95, 0 6px 0 4px #9C1414, 0 3px 0 5px #9C1414, 0 -2px 0 7px #202020, 0 5px 0 7px #202020, 0 7px 0 7px #333;
-        text-shadow: -1px 2px 0 #000, 0 2px 0 #000, 1px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     }
     .save{
         text-align: center;
@@ -505,6 +528,62 @@
     }
     .save-btn{
         padding: 10px 30px;
-        border-radius: 4px;
+    }
+    .add-prop{
+        padding: 6px 20px;
+    }
+    .properties tr td {
+        vertical-align: middle;
+        padding: 10px 0;
+    }
+    .icon-prop {
+        width: 25px;
+    }
+    .remove-prop{
+        padding: 0 5px;
+    }
+    .stats-container{
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .prop-item {
+        display: flex;
+        width: 48%;
+        float: left;
+        margin: 3px 0;
+        background: #C2D3DB;
+    }
+    .item-icon {
+        background: #575E62;
+    }
+    .result-icon {
+        width: 40px;
+    }
+    .item-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 5px;
+    }
+    .result-name {
+        font-size: 10px;
+        color: #333;
+        text-shadow: none;
+        margin-bottom: 5px;
+    }
+    .result-value {
+        color: #fff;
+        text-shadow: -1px 2px 0 #000,0 2px 0 #000,1px 2px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000!important;
+    }
+    .prop-item:nth-child(3), 
+    .prop-item:nth-child(4), 
+    .prop-item:nth-child(7),
+    .prop-item:nth-child(8), 
+    .prop-item:nth-child(11), 
+    .prop-item:nth-child(12), 
+    .prop-item:nth-child(15), 
+    .prop-item:nth-child(16) {
+        background: #fff;
     }
 </style>
